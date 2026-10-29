@@ -57,4 +57,3 @@ NativePixmapType gl4es_egl_create_pixmap_ID_mapping(void *pixmap);
 NativePixmapType gl4es_egl_destroy_pixmap_ID_mapping(int id);
 
 #endif // _EGL_EGL_H
-
