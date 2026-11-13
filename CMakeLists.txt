@@ -133,6 +133,8 @@ set(C_SRC_FILES
     src/glx/lookup.c
     src/glx/gbm.c
     src/glx/streaming.c
+    src/egl/egl.c
+    src/egl/lookup.c
     src/gl/vgpu/shaderconv.c
     src/gl/samplers.c
 )

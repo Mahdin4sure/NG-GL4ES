@@ -276,6 +276,9 @@ extern "C"
     }
 
     char* getBeforeThirdSpace(const char* str) {
+        if (!str) {
+            return NULL;
+        }
         int spaceCount = 0;
         const char* start = str;
         while (*str) {
@@ -333,13 +336,18 @@ extern "C"
         const char* ESVersion = getBeforeThirdSpace((const char*)gles_glGetString(GL_VERSION));
         int major, minor;
 
-        if (sscanf(ESVersion, "OpenGL ES %d.%d", &major, &minor) == 2) {
+        if (ESVersion && sscanf(ESVersion, "OpenGL ES %d.%d", &major, &minor) == 2) {
             globals4es.esversion = major * 100 + minor * 10;
         } else {
+            if (!ESVersion) {
+                SHUT_LOGD("gles_glGetString(GL_VERSION) returned NULL, fallback to %d", globals4es.es);
+            }
             globals4es.esversion = globals4es.es * 100;
         }
         init_internal_glDrawElementsBaseVertex();
-        SHUT_LOGD("OpenGL ES Version: %s (%d)", ESVersion, globals4es.esversion);
+        if (ESVersion) {
+            SHUT_LOGD("OpenGL ES Version: %s (%d)", ESVersion, globals4es.esversion);
+        }
         if (globals4es.esversion < 300) {
             SHUT_LOGD("OpenGL ES version is lower than 3.0! This version is not supported completely!");
             SHUT_LOGD("FBO and texture compression may be completely broken!");
@@ -354,6 +362,10 @@ extern "C"
     const char* getGLESName() {
         LOAD_GLES2(glGetString);
         const char* ESVersion = (const char*)gles_glGetString(GL_VERSION);
+
+        if (!ESVersion) {
+            return "<unknown>";
+        }
 
         return getBeforeThirdSpace(ESVersion);
     }
